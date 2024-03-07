@@ -1,8 +1,11 @@
 using BookStoreAppAPI.Configuration;
 using BookStoreAppAPI.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,7 @@ builder.Services.AddDbContext<BookStoreDbContext>(options =>
     options.UseSqlServer(conString);
 });
 
+//ApiUser inserted inside the AddIdentityCore not to leave out the fields that were added to the User table
 builder.Services.AddIdentityCore<ApiUser>()
     .AddRoles<IdentityRole>()// intended for identifying the role of a user in a system
     .AddEntityFrameworkStores<BookStoreDbContext>();
@@ -46,6 +50,29 @@ builder.Services.AddCors(options=> {
     .AllowAnyOrigin());
 });
 
+
+//First install Microsoft.AspNetCore.Authentication.JwtBearer
+//then add the below code
+//This is used to authenticate users
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options=>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!))
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -62,6 +89,7 @@ app.UseHttpsRedirection();
 //allowing cross-origin requests according to the rules defined in the "AllowAll" policy.
 app.UseCors("AllowAll");
 
+app.UseAuthentication();// add this after adding authentication
 app.UseAuthorization();
 
 app.MapControllers();

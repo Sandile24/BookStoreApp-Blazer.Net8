@@ -30,7 +30,7 @@ namespace BookStoreAppAPI.Controllers
             {
                 var user = _mapper.Map<ApiUser>(userDTO);
                 user.UserName = userDTO.Email;
-                var result = await _userManager.CreateAsync(user, userDTO.Password);
+                var result = await _userManager.CreateAsync(user, userDTO.Password!);
 
                 if (result.Succeeded == false)
                 {
@@ -58,11 +58,11 @@ namespace BookStoreAppAPI.Controllers
             _logger.LogInformation($"Login Attempt for {userDTO.Email}");
             try
             {
-                var user = await _userManager.FindByEmailAsync(userDTO.Email);
+                var user = await _userManager.FindByEmailAsync(userDTO.Email!);
                 if (user == null)
                     return Unauthorized("Invalid email or password");
 
-                var passwordValid = await _userManager.CheckPasswordAsync(user, userDTO.Password);
+                var passwordValid = await _userManager.CheckPasswordAsync(user, userDTO.Password!);
                 if (!passwordValid)
                     return Unauthorized("Invalid email or password");
 
