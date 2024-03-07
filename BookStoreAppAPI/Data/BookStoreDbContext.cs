@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -52,7 +53,66 @@ public partial class BookStoreDbContext : IdentityDbContext<ApiUser>
                 .HasConstraintName("FK_Books_ToTable");
         });
 
-        OnModelCreatingPartial(modelBuilder);
+
+        //Seeded the database
+        //Added these tw Roles to the database
+        modelBuilder.Entity<IdentityRole>().HasData(
+            new IdentityRole
+            {
+               Name="User",
+               NormalizedName="USER",
+               Id= "cee0008b - bcf2 - 4b71 - 8fd4 - f90e0e1548c1"
+            },
+            new IdentityRole
+            {
+                Name="Administrator",
+                NormalizedName="ADMINISTARTOR",
+                Id= "00177bda-de97-4a85-9058-675612e8e1a6"
+            }
+            );
+
+        var hasher = new PasswordHasher<ApiUser>();//for hiding password
+        //Added these two users for testing purposes
+        modelBuilder.Entity<ApiUser>().HasData(
+            new ApiUser
+            {   
+              
+                Id = "2515af1f-70d1-4b2d-a624-844a885fa35f",
+                Email= "skhomo@beier.co.za",
+                NormalizedEmail="SKHOMO@BEIER.CO.ZA",
+                UserName= "skhomo@beier.co.za",
+                NormalizedUserName= "SKHOMO@BEIER.CO.ZA",
+                FirstName="Eric",
+                LastName="Khomo",
+                PasswordHash=hasher.HashPassword(null,"Password")
+            },
+            new ApiUser
+            {
+                Id = "dbaa2eb2-e9b3-4beb-8eed-dc2fe2bbf2b8",
+                Email = "smboweni@beier.co.za",
+                NormalizedEmail = "SMBOWENI@BEIER.CO.ZA",
+                UserName = "skhomo@beier.co.za",
+                NormalizedUserName = "SMBOWENI@BEIER.CO.ZA",
+                FirstName = "Zanele",
+                LastName = "Mboweni",
+                PasswordHash = hasher.HashPassword(null, "Password")
+            }
+            );
+
+        //Adding Roles to the user, Many to Many
+        modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+            new IdentityUserRole<string>
+            { 
+                RoleId= "cee0008b - bcf2 - 4b71 - 8fd4 - f90e0e1548c1",
+                UserId= "dbaa2eb2-e9b3-4beb-8eed-dc2fe2bbf2b8"
+            },
+            new IdentityUserRole<string>
+            {
+                RoleId = "00177bda-de97-4a85-9058-675612e8e1a6",
+                UserId = "2515af1f-70d1-4b2d-a624-844a885fa35f"
+            }
+            );
+           OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
