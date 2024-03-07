@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookStoreAppAPI.Data;
-using BookStoreAppAPI.Models.Author;
 using AutoMapper;
+using BookStoreAppAPI.Models.Author;
 
 namespace BookStoreAppAPI.Controllers
 {

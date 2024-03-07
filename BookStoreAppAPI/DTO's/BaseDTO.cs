@@ -1,4 +1,4 @@
-﻿namespace BookStoreAppAPI.Models
+﻿namespace BookStoreAppAPI.DTO_s
 {
     public class BaseDTO
     {

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using BookStoreAppAPI.DTO_s;
+using System.ComponentModel.DataAnnotations;
 
 namespace BookStoreAppAPI.Models.Author
 {
