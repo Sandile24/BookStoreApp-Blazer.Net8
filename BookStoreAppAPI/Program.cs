@@ -21,6 +21,7 @@ builder.Services.AddIdentityCore<ApiUser>()
     .AddRoles<IdentityRole>()// intended for identifying the role of a user in a system
     .AddEntityFrameworkStores<BookStoreDbContext>();
 
+//add this for automapper to work.
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Services.AddControllers();
@@ -30,7 +31,7 @@ builder.Services.AddSwaggerGen();
 
 
 //setting up the logger, reference from appsettings
-//Serilo.aspnet, Serilog.Expresion, Serilog.Sink.Seq--These are required 
+//Serilog.aspnet, Serilog.Expresion, Serilog.Sink.Seq--These are required 
 //for the log to work.
 builder.Host.UseSerilog((ctx, lc)=>
 lc.WriteTo.Console().ReadFrom!.Configuration(ctx.Configuration));;

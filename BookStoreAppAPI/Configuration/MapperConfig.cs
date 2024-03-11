@@ -14,6 +14,7 @@ namespace BookStoreAppAPI.Configuration
             CreateMap<AuthorCreateDTO, Author>().ReverseMap();
             CreateMap<AuthorUpdateDTO, Author>().ReverseMap();
             CreateMap<AuthorReadDTO, Author>().ReverseMap();
+
             //These are DTO's for mapping Book
             CreateMap<BookCreateDTO, Book>().ReverseMap();
             //Here I mapped the author fullname after including an author to the book.

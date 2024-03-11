@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreAppAPI.Data;
-//The ApiUser class was used to add fields to the users table 
+//The ApiUser class is used to add fields to the users table 
 public partial class BookStoreDbContext : IdentityDbContext<ApiUser>
 {
     public BookStoreDbContext()

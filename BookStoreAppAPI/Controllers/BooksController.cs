@@ -4,11 +4,13 @@ using BookStoreAppAPI.Data;
 using AutoMapper;
 using BookStoreAppAPI.DTO_s.Book;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStoreAppAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly BookStoreDbContext _context;
@@ -19,7 +21,7 @@ namespace BookStoreAppAPI.Controllers
         {
             _context = context;
             _mapper = mapper;
-            _logger = logger;
+            _logger = logger;// For handling errors on users screen
         }
 
         // GET: api/Books
@@ -39,7 +41,7 @@ namespace BookStoreAppAPI.Controllers
             catch (Exception e)
             {
                 _logger.LogError(e, $"Error Perfoming  GET in{nameof(GetBooks)}");
-                return BadRequest("There ws an error, please try again");
+                return BadRequest("There was an error, please try again");
             }
         }
 
@@ -51,20 +53,18 @@ namespace BookStoreAppAPI.Controllers
                 .Include(a => a.Author)
                 .ProjectTo<BookDetailsDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(a=>a.Id==id);
-
             if (book == null)
             {
                 return NotFound($"There is no book the Id Number {id} in the database");
             }
-
             //var bookDTO = _mapper.Map<BookReadDTO>(book);
-
             return book;
         }
 
         // PUT: api/Books/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutBook(int id, BookUpdateDTO bookDTO)
         {
             var book = _context.Books.ToListAsync();
@@ -72,12 +72,10 @@ namespace BookStoreAppAPI.Controllers
             {
                 return BadRequest();
             }
-
             if (book == null)
                 return BadRequest($"Book with Id number {id} is not available");
              await _mapper.Map(bookDTO, book);
             _context.Entry(book).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -93,25 +91,24 @@ namespace BookStoreAppAPI.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
         // POST: api/Books
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<BookCreateDTO>> PostBook(BookCreateDTO bookDTO)
-        {
-            
+        {            
             var book = _mapper.Map<Book>(bookDTO);
             await _context.Books.AddAsync(book);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction(nameof(GetBooks), new { id = book.Id }, book);
         }
 
         // DELETE: api/Books/5
         [HttpDelete("{id}")]
+        [Authorize(Roles ="Administrator")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             var book = await _context.Books.FindAsync(id);
@@ -119,10 +116,8 @@ namespace BookStoreAppAPI.Controllers
             {
                 return NotFound();
             }
-
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
 
