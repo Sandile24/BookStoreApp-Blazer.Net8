@@ -1,0 +1,77 @@
+﻿@page "/users/register"
+@using Newtonsoft.Json
+@using System.Text
+@inject NavigationManager manager
+@inject IClient httpClient
+
+<h3>Register New Account</h3>
+
+@if (string.IsNullOrEmpty(message) == false)
+{
+  <div class="alert alert-danger">
+      <p>@message</p>
+  </div>  
+}
+<div class="card-body">
+    <EditForm Model="RegistrationModel" OnInvalidSubmit="HandleRegistration" FormName="RegistrationForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <InputText class="form-control" @bind-Value="RegistrationModel.Email" />
+            <ValidationMessage For="@(()=> RegistrationModel.Email)" />
+        </div>
+        <div class="form-group">
+            <label for="firstname">First Name</label>
+            <InputText class="form-control" @bind-Value="RegistrationModel.FirstName" />
+            <ValidationMessage For="@(()=> RegistrationModel.FirstName)" />
+        </div>
+        <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <InputText class="form-control" @bind-Value="RegistrationModel.LastName" />
+            <ValidationMessage For="@(()=> RegistrationModel.LastName)" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <InputText class="form-control" type="password" @bind-Value="RegistrationModel.Password" />
+            <ValidationMessage For="@(()=> RegistrationModel.Password)" />
+        </div>
+        @*  <div class="form-group">
+        <label for="password">Role</label>
+        <InputText class="form-control" type="password" @bind-Value="RegistrationModel.Password" />
+        <ValidationMessage For="@(()=> RegistrationModel.Role)" />
+        </div> *@
+        <br />
+        <button type="submit" class="btn btn-primary">Register</button>
+    </EditForm>
+</div>
+
+@code {
+    UserDTO RegistrationModel = new UserDTO
+    {
+       Role= "User"  
+    };
+    string message = "";
+
+    public async Task HandleRegistration()
+    {
+        try
+        {
+            await  httpClient.RegisterAsync(RegistrationModel);
+        }
+        catch (ApiException ex)
+        {
+            if (ex.StatusCode >= 200 && ex.StatusCode <= 299)
+            {
+                NavigateToLogin();
+            }
+            message = ex.Message;
+        }
+    }
+
+    private void NavigateToLogin()
+    {
+        manager.NavigateTo("/users/login");
+    }
+}

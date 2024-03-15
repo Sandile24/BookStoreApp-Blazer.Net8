@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,9 +6,6 @@ namespace BookStoreAppAPI.Data;
 //The ApiUser class is used to add fields to the users table 
 public partial class BookStoreDbContext : IdentityDbContext<ApiUser>
 {
-    public BookStoreDbContext()
-    {
-    }
 
     public BookStoreDbContext(DbContextOptions<BookStoreDbContext> options)
         : base(options)
@@ -55,7 +50,7 @@ public partial class BookStoreDbContext : IdentityDbContext<ApiUser>
 
 
         //Seeded the database
-        //Added these tw Roles to the database
+        //Added these two Roles to the database
         modelBuilder.Entity<IdentityRole>().HasData(
             new IdentityRole
             {
