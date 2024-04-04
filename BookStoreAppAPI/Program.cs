@@ -23,20 +23,16 @@ builder.Services.AddIdentityCore<ApiUser>()
 
 //add this for automapper to work.
 builder.Services.AddAutoMapper(typeof(MapperConfig));
-
+//
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
 //setting up the logger, reference from appsettings
 //Serilog.aspnet, Serilog.Expresion, Serilog.Sink.Seq--These are required 
 //for the log to work.
 builder.Host.UseSerilog((ctx, lc)=>
-lc.WriteTo.Console().ReadFrom!.Configuration(ctx.Configuration));;
-
-
+lc.WriteTo.Console().ReadFrom!.Configuration(ctx.Configuration));
 //to allow clients from any where to access the system
 //for this to work, add the (app.UseCors("AllowAll");)
 //this configuration allows unrestricted cross-origin

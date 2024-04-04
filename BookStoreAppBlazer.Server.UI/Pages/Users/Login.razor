@@ -1,0 +1,53 @@
+﻿@page "/users/login"
+@using BookStoreAppBlazer.Server.UI.Services.Authentication
+@inject IAuthenticationService authService
+@inject NavigationManager _navManager
+
+<h3>Login</h3>
+<div style="max-width: 400px;" align="center">
+<div>
+    <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <InputText class="form-control" @bind-Value="LoginModel.Email" />
+            <ValidationMessage For="@(()=> LoginModel.Email)" />
+        </div>
+
+        <div class="form-group">
+            <label for="email">Password</label>
+            <InputText class="form-control" type="password" @bind-Value="LoginModel.Password" />
+            <ValidationMessage For="@(()=> LoginModel.Password)" />
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </EditForm>
+</div>
+</div>
+@code {
+    LoginUserDTO LoginModel = new LoginUserDTO();
+    string message = string.Empty;
+
+    public async Task HandleLogin()
+    {
+        try
+        {
+            var response = await authService.AuthenticateAsync(LoginModel);
+
+            if (response)
+            {
+                _navManager.NavigateTo("/");
+            }
+            message = "Inmvalid Credentials, Please Try Again";
+        }
+        catch (ApiException ex)
+        {
+            if (ex.StatusCode >= 200 && ex.StatusCode <= 299)
+            {
+
+            }
+            message = ex.Response;
+        }
+    }
+}

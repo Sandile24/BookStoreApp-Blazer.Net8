@@ -10,7 +10,7 @@
       <p>@message</p>
    </div>    
 }
-
+<!---->
 <div class="card-body">
     <EditForm Model="RegistrationModel" OnValidSubmit="HandleRegistration" FormName="registration_form">
         <DataAnnotationsValidator />
@@ -47,16 +47,21 @@
     };
     string message = string.Empty;
 
-        private async Task HandleRegistration()
+    private async Task HandleRegistration()
+    {
+        try
         {
-            try
-            {
-                await httpClient.RegisterAsync(RegistrationModel);
-                navManager.NavigateTo("/users/login");
-            }
-            catch (ApiException ex)
-            {
-                message = ex.Message;
-            }
+            await httpClient.RegisterAsync(RegistrationModel);
+            navManager.NavigateTo("/users/login");
         }
+        catch (ApiException ex)
+        {
+            message = ex.Message;
+        }
+    }
+
+    private void NavigateToLogin()
+    {
+        navManager.NavigateTo("/users/login");
+    }
 }
