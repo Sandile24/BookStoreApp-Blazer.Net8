@@ -23,7 +23,6 @@ public partial class BookStoreDbContext : IdentityDbContext<ApiUser>
         modelBuilder.Entity<Author>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Authors__3214EC07BB4FAD9B");
-
             entity.Property(e => e.Bio).HasColumnName("BIO");
             entity.Property(e => e.FirstName).HasMaxLength(50);
             entity.Property(e => e.LastName).HasMaxLength(50);

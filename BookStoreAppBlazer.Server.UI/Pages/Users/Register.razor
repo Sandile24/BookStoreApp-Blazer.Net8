@@ -2,7 +2,7 @@
 @inject IClient httpClient
 @inject NavigationManager navManager
 
-<h3>Register New User</h3>
+<h3 align="center">Register New User</h3>
 
 @if (string.IsNullOrEmpty(message) == false)
 {
@@ -10,37 +10,41 @@
       @message
   </div>    
 }
-<div class="card-body">
-    <div style="max-width: 400px;" align="center">
-        <!-- Adjust the max-width value as needed -->
-        <EditForm Model="RegistrationModel" OnValidSubmit="HandleRegistration">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <InputText class="form-control" @bind-Value="RegistrationModel.Email" maxlength="50" />
-                <ValidationMessage For="@(()=> RegistrationModel.Email)" />
-            </div>
-            <div class="form-group">
-                <label for="firstname">First Name</label>
-                <InputText class="form-control" @bind-Value="RegistrationModel.FirstName" maxlength="30" />
-                <ValidationMessage For="@(()=> RegistrationModel.FirstName)" />
-            </div>
-            <div class="form-group">
-                <label for="lastname">Last Name</label>
-                <InputText class="form-control" @bind-Value="RegistrationModel.LastName" maxlength="30" />
-                <ValidationMessage For="@(()=> RegistrationModel.LastName)" />
-            </div>
-            <div class="form-group">
-                <label for="email">Password</label>
-                <InputText class="form-control" type="password" @bind-Value="RegistrationModel.Password" maxlength="20" />
-                <ValidationMessage For="@(()=> RegistrationModel.Password)" />
-            </div>
-            <br>
-            <button type="submit" class="btn btn-primary btn-block">Submit</button>
-        </EditForm>
+
+<div class="container">
+    <div class="card-body">
+        <div style="max-width: 400px; margin: 0 auto;">
+            <!-- Adjust the max-width value as needed -->
+            <EditForm Model="RegistrationModel" OnValidSubmit="HandleRegistration">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <InputText class="form-control" @bind-Value="RegistrationModel.Email" maxlength="50" />
+                    <ValidationMessage For="@(()=> RegistrationModel.Email)" />
+                </div>
+                <div class="form-group">
+                    <label for="firstname">First Name</label>
+                    <InputText class="form-control" @bind-Value="RegistrationModel.FirstName" maxlength="30" />
+                    <ValidationMessage For="@(()=> RegistrationModel.FirstName)" />
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last Name</label>
+                    <InputText class="form-control" @bind-Value="RegistrationModel.LastName" maxlength="30" />
+                    <ValidationMessage For="@(()=> RegistrationModel.LastName)" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Password</label>
+                    <InputText class="form-control" type="password" @bind-Value="RegistrationModel.Password" maxlength="20" />
+                    <ValidationMessage For="@(()=> RegistrationModel.Password)" />
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </EditForm>
+        </div>
     </div>
 </div>
+
 
 @code {
     UserDTO RegistrationModel = new UserDTO

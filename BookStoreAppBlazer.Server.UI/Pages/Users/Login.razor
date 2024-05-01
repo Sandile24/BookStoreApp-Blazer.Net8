@@ -3,9 +3,9 @@
 @inject IAuthenticationService authService
 @inject NavigationManager _navManager
 
-<h3>Login</h3>
-<div style="max-width: 400px;" align="center">
+<h3 align="center">Login</h3>
 <div>
+        <div style="max-width: 400px; margin: 0 auto;">
     <EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
         <DataAnnotationsValidator />
         <ValidationSummary />
