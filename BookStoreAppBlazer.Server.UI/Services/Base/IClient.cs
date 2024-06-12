@@ -4,6 +4,4 @@
     {
         public HttpClient HttpClient { get;}
     }
-
-
 }

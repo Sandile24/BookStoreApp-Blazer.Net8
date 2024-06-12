@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using BookStoreAppBlazer.Server.UI.Configurations;
 using BookStoreAppBlazer.Server.UI.Providers;
 using BookStoreAppBlazer.Server.UI.Services;
 using BookStoreAppBlazer.Server.UI.Services.Authentication;
@@ -18,9 +19,15 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddHttpClient<IClient, Client>(cl => cl.BaseAddress = new Uri("https://localhost:7151"));
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
+
+//add this for automapper to work.
+builder.Services.AddAutoMapper(typeof(MapperConfig));
+
 builder.Services.AddScoped<ApiAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(p =>
 p.GetRequiredService<ApiAuthenticationStateProvider>());
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

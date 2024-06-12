@@ -4,6 +4,8 @@ using BookStoreAppAPI.Data;
 using AutoMapper;
 using BookStoreAppAPI.Models.Author;
 using Microsoft.AspNetCore.Authorization;
+//using BookStoreAppAPI.DTO_s.Author;
+using AutoMapper.QueryableExtensions;
 
 namespace BookStoreAppAPI.Controllers
 {
@@ -40,43 +42,47 @@ namespace BookStoreAppAPI.Controllers
             }
         }
         // GET: api/Authors/5
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<AuthorReadDTO>> GetAuthor(int id)
+        public async Task<ActionResult<AuthorDetailsDTO>> GetAuthor(int id)
         {
-            var author = await _context.Authors.FindAsync(id);
+            var author = await _context.Authors.Include(q => q.Books)
+                .ProjectTo<AuthorDetailsDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(q => q.Id == id);
             if (author == null)
             {
                 return NotFound($"There is no Author with ID {id} on the database");
             }
-            var authorDTO = _mapper.Map<AuthorReadDTO>(author);
-            return authorDTO;
+            return author;
         }
 
         // PUT: api/Authors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{Id}")]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> PutAuthor(int id, AuthorUpdateDTO authorDTO)
+        public async Task<IActionResult> PutAuthor(int Id, AuthorUpdateDTO authorDTO)
         {
-            if (id != authorDTO.Id)
+            if (Id != authorDTO.Id)
             {
                 return BadRequest();
             }
-            var author = await _context.Authors.FindAsync();
+
+            var author = await _context.Authors.FindAsync(Id);
 
             if (author == null)
                 return NotFound();
+
             _mapper.Map(authorDTO, author);
 
-
             _context.Entry(author).State = EntityState.Modified;
+
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await AuthorExists(id))
+                if (!await AuthorExists(Id))
                 {
                     return NotFound();
                 }
@@ -85,8 +91,10 @@ namespace BookStoreAppAPI.Controllers
                     throw;
                 }
             }
+
             return NoContent();
         }
+
 
         // POST: api/Authors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

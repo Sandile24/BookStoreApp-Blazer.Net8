@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStoreAppAPI.Data;
+//using BookStoreAppAPI.DTO_s.Author;
 using BookStoreAppAPI.DTO_s.Book;
 using BookStoreAppAPI.DTO_s.UserDTO;
 using BookStoreAppAPI.Models.Author;
@@ -12,6 +13,7 @@ namespace BookStoreAppAPI.Configuration
         {
             //These are for mapping Authors necessary details
             CreateMap<AuthorCreateDTO, Author>().ReverseMap();
+            CreateMap<AuthorDetailsDTO, Author>().ReverseMap();
             CreateMap<AuthorUpdateDTO, Author>().ReverseMap();
             CreateMap<AuthorReadDTO, Author>().ReverseMap();
 

@@ -27,6 +27,7 @@
 </div>
 @code {
     LoginUserDTO LoginModel = new LoginUserDTO();
+    
     string message = string.Empty;
 
     public async Task HandleLogin()
@@ -39,7 +40,7 @@
             {
                 _navManager.NavigateTo("/");
             }
-            message = "Inmvalid Credentials, Please Try Again";
+            message = "Invalid Credentials, Please Try Again";
         }
         catch (ApiException ex)
         {

@@ -1,0 +1,62 @@
+﻿@page "/authors/update/{id:int}"
+@inject IAuthorService _authorService
+@inject NavigationManager _navManager
+@inject HttpClient _httpClient
+@attribute [Authorize(Roles = Roles.Administrator)]
+
+
+<h3>Edit Author</h3>
+<EditForm Model="AuthorUpdate">
+    <fieldset disabled="true">
+        <div class="form-group">
+            <label for="firstname">First Name</label>
+            <InputText class="form-control" @bind-Value="AuthorUpdate.FirstName" id="firstname" />
+            <ValidationMessage For="@(()=> AuthorUpdate.FirstName)" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <InputText class="form-control" @bind-Value="AuthorUpdate.LastName" id="lastname" />
+            <ValidationMessage For="@(()=> AuthorUpdate.LastName)" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="bio">Biography</label>
+            <InputText class="form-control" @bind-Value="AuthorUpdate.Bio" id="bio" />
+            <ValidationMessage For="@(()=> AuthorUpdate.Bio)" />
+        </div>
+    </fieldset>
+    <button type="submit" class="btn btn-outline-warning">
+        <span class="oi oi-media-skip-backward"></span>
+        Edit Author
+    </button>
+    <button @onclick="BackToList" class="btn btn-outline-secondary">
+        <span class="oi oi-media-skip-backward"></span>
+        Back To List
+    </button>
+</EditForm>
+@code {
+    AuthorReadDTO AuthorUpdate = new AuthorReadDTO();
+    [Parameter]
+    public int id { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        // authorUpdateDTO = await _httpClient.GetFromJsonAsync<AuthorUpdateDTO>($"/api/authors/{Id}");
+        var response = await _authorService.GetAuthor(id);
+        if (response.Success)
+        {
+            AuthorUpdate = response.Data;
+        }
+    }
+    
+    private void BackToList()
+    {
+        _navManager.NavigateTo("/authors/");
+    }
+    private void GoToEdit()
+    {
+        _navManager.NavigateTo($"/authors/update/{AuthorUpdate.Id}");
+    }
+}
+

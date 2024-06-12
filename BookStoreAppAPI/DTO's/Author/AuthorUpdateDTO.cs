@@ -1,4 +1,5 @@
 ﻿using BookStoreAppAPI.DTO_s;
+using BookStoreAppAPI.DTO_s.Book;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookStoreAppAPI.Models.Author
@@ -14,5 +15,6 @@ namespace BookStoreAppAPI.Models.Author
         public string? LastName { get; set; }
         [StringLength(350)]
         public string? Bio { get; set; }
+
     }
 }

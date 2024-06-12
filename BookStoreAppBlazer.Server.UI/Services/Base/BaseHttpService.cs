@@ -23,6 +23,11 @@ namespace BookStoreAppBlazer.Server.UI.Services.Base
             {
                 return new Response<Guid>() { Message = "The item you requsted could not be found.", Success = false };
             }
+            if (apiException.StatusCode >= 200 && apiException.StatusCode <= 299)
+            {
+                return new Response<Guid>() { Message = "Success", Success = true };
+            }
+
 
             return new Response<Guid>() { Message = "Something went wrong, please try again.", Success = false };
         }
