@@ -12,6 +12,6 @@ namespace BookStoreAppAPI.Models.Author
         [StringLength(50)]
         public string? LastName { get; set; }
         [StringLength(350)]
-        public string? Bio { get; set; }
+        public string Bio { get; set; }
     }
 }

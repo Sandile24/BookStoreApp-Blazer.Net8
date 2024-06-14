@@ -16,13 +16,14 @@ namespace BookStoreAppAPI.DTO_s.Book
         [Required]
         [StringLength(300, MinimumLength = 10)]
         public string? Summary { get; set; }
-
         public string? Image { get; set; }
+        public string? ImageData { get; set; }
+        public string OriginalImageName { get; set; }
         [Required]
         [Range(0, int.MaxValue)]
         public decimal? Price { get; set; }
-        //public int? AuthorId { get; set; }
+        public int? AuthorId { get; set; }
 
-        //public string? AuthorName { get; set; }
+        public string? AuthorName { get; set; }
     }
 }

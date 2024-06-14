@@ -16,6 +16,8 @@ public partial class Book
     public string? Summary { get; set; }
 
     public string? Image { get; set; }
+    public string? ImageData { get; set; }
+    public string OriginalImageName { get; set; }
 
     public decimal? Price { get; set; }
 

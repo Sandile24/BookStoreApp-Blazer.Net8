@@ -21,7 +21,7 @@
 else
 {
     //In a following line, if role was a user they would still see create buttton but will not be able to create
-    //due to restrictions in the controller.
+    //due to restrictions in the Author controller.
     <AuthorizeView Roles="Administrator">
         <a class="btn btn-primary" href="/authors/create/"><span class="oi oi-plus" aria-hidden="true"></span>Create </a>
     </AuthorizeView>

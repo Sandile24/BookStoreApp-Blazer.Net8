@@ -32,18 +32,22 @@
         </div>
     }
     else
-    {
-        foreach (var book in AuthorDetails.Books)
+    { 
+        <div class="row">
+        @foreach (var book in AuthorDetails.Books)
         {
-            <div class="card" style="width: 18rem;">
-                <img src="@book.Image" class="card-img-top" alt="@book.Title">
-                <div class="card-body">
-                    <h5 class="card-title">@book.Title - @book.Price</h5>
-                    <p class="card-text"> </p>
-                    <a href="#" class="btn btn-primary">View Book</a>
-                </div>
+            <div class="col-3">
+                    <div class="card" style="width: 18rem;">
+                        <img src="@book.Image" class="card-img-top" alt="@book.Title" style="height: 200px;width: 200px">
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title - @book.Price</h5>
+                            <p class="card-text"> </p>
+                            <a href="#" class="btn btn-primary">View Book</a>
+                        </div>
+                    </div>
             </div>
-        } 
+        }
+        </div>
     }
 
     <button type="submit" class="btn btn-outline-warning">

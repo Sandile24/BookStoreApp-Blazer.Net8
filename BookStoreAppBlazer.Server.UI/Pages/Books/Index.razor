@@ -1,0 +1,95 @@
+﻿@page "/books"
+@inject IBookService _bookService
+@inject NavigationManager _navigationManager
+@inject IJSRuntime js  //gives us access to different javascript prompt//
+<h3>List of Books</h3>
+
+@if (response.Success)
+{
+    <div class="alert alert-info">
+        <h4>@response.Message</h4>
+    </div>
+}
+
+@if (books == null)
+{
+    <div class="alert alert-warning">
+        <h4>Loading data...</h4>
+    </div>
+}
+else
+{
+    //In a following line, if role was a user they would still see create buttton but will not be able to create
+    //due to restrictions in the Author controller.
+    <AuthorizeView Roles="Administrator">
+        <a class="btn btn-primary" href="/books/create"><span class="oi oi-plus" aria-hidden="true"></span>Create </a>
+    </AuthorizeView>
+    <br />
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Price</th>
+                @*<th>Image</th>*@
+                @*<th>Image</th>*@
+                @*<th>Author Id</th>*@
+                <th>Author Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in books)
+            {
+                <tr>
+                    <td href="/">
+                        <img src="@book.Image" width="100" height="100" alt="@book image" />
+                    </td>
+                    <td>@book.Title</td>
+                    <td>@book.Price.ToString()</td>
+                    @*<td>@book.AuthorName</td>*@
+                    @*<td>@book.AuthorId</td>*@
+                    <td><a class="btn btn-link" href="/authors/details/@book.AuthorId">@book.AuthorName</a></td>
+                    <td>
+                        <a class="btn btn-primary" href="/books/details/@book.Id"> <span class="oi oi-book" aria-hidden="true"></span>View</a>
+                        <AuthorizeView Roles="Administrator">
+                            <a class="btn btn-warning" disabled="true" href="/books/update/@book.Id"> <span class="oi oi-book" aria-hidden="true"></span>Edit</a>
+                            <button class="btn btn-danger" @onclick=@(()=> Delete(@book.Id))><span class="oi oi-delete" aria-hidden="true"></span>Delete</button>
+                        </AuthorizeView>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private List<BookReadDTO> books;
+    private Response<List<BookReadDTO>> response = new Response<List<BookReadDTO>> { Success = true };
+
+    protected override async Task OnInitializedAsync()
+    {
+        response = await _bookService.GetBooks();
+        if (response.Success)
+        {
+            books = response.Data;
+        }
+    }
+
+    private async Task Delete(int bookId)
+    {
+        var book = books.First(q => q.Id == bookId); //introduced this just to give my delete a nice precision
+        var confirm = await js.InvokeAsync<bool>("confirm", $"Are you sure you want to delete the book by the title of {book.Title}?");
+        if (confirm)
+        {
+            var response = await _bookService.DeleteBook(bookId);
+            if (response.Success)
+            {
+                await OnInitializedAsync();
+            }
+        }
+    }
+    void NavigateToEdit(int id)
+    {
+        _navigationManager.NavigateTo($"/books/update/{id}");
+    }
+}

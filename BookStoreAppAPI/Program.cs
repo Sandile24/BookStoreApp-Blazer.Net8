@@ -80,6 +80,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles(); //to serve static files
+
 //to allow clients from any where to access the system
 //By using app.UseCors("AllowAll"),
 //you're essentially enabling CORS support for your application,
@@ -88,6 +90,7 @@ app.UseCors("AllowAll");
 
 app.UseAuthentication();// add this after adding authentication
 app.UseAuthorization();
+
 
 app.MapControllers();
 

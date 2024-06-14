@@ -1,0 +1,81 @@
+﻿@page "/books/details/{id:int}"
+@inject IBookService _bookService
+@inject IAuthorService _authorService
+@inject NavigationManager _navManager
+
+<h3>Book Details</h3>
+<EditForm Model="BookDtls">
+    <fieldset disabled="true">
+        <div class="form-group">
+            <label>Book Cover Photo</label>
+            <div>
+                <img src="@BookDtls.Image" width="100" height="100" class="img-thumbnail" />
+           </div>
+        </div>
+
+        <div class="form-group">
+            <label for="booktitle">Book Title</label>
+            <InputText class="form-control" @bind-Value="BookDtls.Title" id="booktitle" />
+        </div>
+        <div class="form-group">
+            <label for="booktitle">Author name</label>
+            <InputText class="form-control" @bind-Value="BookDtls.AuthorName" id="booktitle" />
+        </div>
+
+        <div class="form-group">
+            <label for="isbn">ISBN</label>
+            <InputText class="form-control" @bind-Value="BookDtls.Isbn" id="isbn" />
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price</label>
+            <InputNumber class="form-control" @bind-Value="BookDtls.Price" id="price" />
+        </div>
+
+        <div class="form-group">
+            <label for="year">Year</label>
+            <InputNumber class="form-control" @bind-Value="BookDtls.Year" id="year" />
+        </div>
+
+        <div class="form-group">
+            <label for="summary">Summary</label>
+            <InputTextArea class="form-control" @bind-Value="BookDtls.Summary" id="summary" />
+        </div>
+    </fieldset>
+</EditForm>
+
+<button class="btn btn-secondary" @onclick="BackToList" type="button">
+    <span class="oi oi-media-skip-backward"></span>
+    Back to List
+    </button>
+<button class="btn btn-primary" @onclick="GoToEdit" type="button">
+    <span class="oi oi-media-skip-backward"></span>
+    Edit Book
+    </button>
+
+@code {
+    private BookDetailsDTO BookDtls = new BookDetailsDTO();
+    private List<AuthorDetailsDTO> Authors = new List<AuthorDetailsDTO>();
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var bookResponse = await _bookService.GetBook(id);
+        if (bookResponse.Success)
+        {
+            BookDtls = bookResponse.Data;
+        }
+    }
+
+    private void BackToList()
+    {
+        _navManager.NavigateTo("/books/");
+    }
+
+    private void GoToEdit()
+    {
+        _navManager.NavigateTo($"/books/update/{id}");
+    }
+}
